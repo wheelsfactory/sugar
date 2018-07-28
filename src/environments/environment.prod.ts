@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  API_ENDPOINT: 'http://wheelsfactory.cn:8080/api/'
 };

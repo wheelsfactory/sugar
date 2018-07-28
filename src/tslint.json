@@ -12,6 +12,7 @@
       "element",
       "sugar",
       "kebab-case"
-    ]
+    ],
+    "prefer-const": false
   }
 }

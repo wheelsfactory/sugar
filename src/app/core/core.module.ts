@@ -18,10 +18,7 @@ const SERVICES = [{
     FormsModule
   ],
   declarations: [],
-  exports: [
-    CommonModule,
-    FormsModule
-  ],
+  exports: [],
   providers: [...SERVICES, {
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
   }]

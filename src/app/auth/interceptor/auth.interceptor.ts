@@ -18,7 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
 
     let token = authService.getAuthToken();
-    if (token != null) {
       const clonedRequest = req.clone({
         headers: req.headers.set('Authorization', 'Bearer ' + token),
         withCredentials: true,
@@ -36,12 +35,8 @@ export class AuthInterceptor implements HttpInterceptor {
             }
           }),
           catchError(err => {
-            this.logger.error(err);
             return throwError(err);
           })
         );
-    } else {
-      this.router.navigateByUrl('/login');
     }
   }
-}

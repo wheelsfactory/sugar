@@ -6,7 +6,6 @@ import {CoreModule} from './core/core.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {LoginComponent} from './login/login.component';
 import {AppRoutingModule} from './app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {AuthGuard} from './auth/auth.guard';
@@ -14,7 +13,6 @@ import {AuthGuard} from './auth/auth.guard';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     DashboardComponent
   ],
   imports: [

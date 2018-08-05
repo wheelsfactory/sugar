@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {AccessToken} from '../login/user/user';
 import {environment} from '../../../environments/environment';
-import {tap} from 'rxjs/operators';
-import { ResponseData } from '../../response/response';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AuthService {
 
   isLogin = false;
@@ -16,19 +15,28 @@ export class AuthService {
   constructor(private http: HttpClient) {
   }
 
-  login(userName: string, password: string): Promise<ResponseData> {
-
-    const formData = {
-      username: 'admin@zshop.com',
-      password: '123456'
+  login(username: string, password: string): Observable<string> {
+    let data = {
+      username: username,
+      password: password
     };
-    return this.http.post(environment.API_ENDPOINT + 'login', JSON.stringify(formData)).toPromise()
-    .then((response: ResponseData) => {
-      this.isLogin = response.status === 0;
-      this.account = userName;
-      this.setAuthToken(response.token);
-      return response;
-    });
+    return this.http.post<AccessToken>(environment.API_ENDPOINT + 'login', data).pipe(
+      map(res => {
+        if (res.status === 0) {
+          this.setAuthToken(res.token);
+          return res.token;
+        } else {
+          throw new Error(res.message);
+        }
+      }),
+      tap(
+        _ => _,
+        (err) => console.log({
+          title: 'Error',
+          msg: (err.error && err.error.errorMessage) || err.message,
+        })
+      )
+    );
   }
 
   getAuthToken() {
@@ -36,10 +44,14 @@ export class AuthService {
   }
 
   setAuthToken(token: string) {
-    localStorage.setItem('userToken',token);
+    localStorage.setItem('userToken', token);
   }
 
-  private setSession(authResponse) {
+  clearAuthToken() {
+    localStorage.removeItem('userToken');
+  }
 
+  isLoggedIn() {
+    return !!this.getAuthToken();
   }
 }

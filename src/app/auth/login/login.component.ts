@@ -1,19 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {AuthService} from '../service/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'sugar-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   user: {
     email: string;
     password: string;
   };
 
   returnUrl: string;
+
+  subscription: Subscription;
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -39,11 +42,15 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
-    this.authService.login(this.user.email, this.user.password).subscribe(
+    this.subscription = this.authService.login(this.user.email, this.user.password).subscribe(
       () => {
         this.router.navigateByUrl('/');
       }
     );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }
